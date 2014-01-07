@@ -111,7 +111,8 @@ class FiniteStateMachine(object):
   '''
   A finite state machine.
   '''
-  def __init__(self):
+  def __init__(self, *args, **kwargs):
+    super(FiniteStateMachine, self).__init__(*args, **kwargs)
     self.__fsm_transition_table__ = self.__create_lookup_table__()
 
   def __create_lookup_table__(self):
