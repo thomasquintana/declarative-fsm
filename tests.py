@@ -16,7 +16,8 @@
 # under the License.
 #
 # Thomas Quintana <quintana.thomas@gmail.com>
-from fsm import *
+
+from lib.fsm import *
 from unittest import TestCase, expectedFailure
 
 class AbstractLightBulb(FiniteStateMachine):
@@ -112,10 +113,7 @@ class LightBulbTests(TestCase):
     light_bulb = LightBulb()
     light_bulb.electricity = True
     self.assertTrue(light_bulb.state == 'off')
-    try:
-      light_bulb.on_message('turn off')
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn off')
     self.assertFalse(hasattr(light_bulb, 'indicator'))
 
   def test_terminal_state(self):
@@ -131,59 +129,38 @@ class LightBulbTests(TestCase):
     light_bulb.on_message('break')
     self.assertTrue(light_bulb.state == 'broken')
     self.assertTrue(light_bulb.indicator == 'broken')
-    try:
-      light_bulb.on_message('turn on')
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn on')
     self.assertTrue(light_bulb.state == 'broken')
     self.assertTrue(light_bulb.indicator == 'broken')
 
   def test_guard_denial(self):
     light_bulb = LightBulb()
     self.assertTrue(light_bulb.state == 'off')
-    try:
-      light_bulb.on_message('turn on')
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn on')
     self.assertTrue(light_bulb.state == 'off')
     self.assertFalse(hasattr(light_bulb, 'indicator'))
 
   def test_multiple_guards(self):
     light_bulb = None
-    try:
-      light_bulb = LightBulbWithMultipleGuards()
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, LightBulbWithMultipleGuards)
     self.assertTrue(light_bulb == None)
 
   def test_multiple_on_enter_actions(self):
     light_bulb = None
-    try:
-      light_bulb = LightBulbWithMultipleOnEnterActions()
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, LightBulbWithMultipleOnEnterActions)
     self.assertTrue(light_bulb == None)
 
   def test_multiple_on_exit_actions(self):
     light_bulb = None
-    try:
-      light_bulb = LightBulbWithMultipleOnExitActions()
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, LightBulbWithMultipleOnExitActions)
     self.assertTrue(light_bulb == None)
 
   def test_bad_action_state(self):
     light_bulb = None
-    try:
-      light_bulb = LightBulbWithBadActionState()
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, LightBulbWithBadActionState)
     self.assertTrue(light_bulb == None)
 
   def test_bad_guard_state(self):
     light_bulb = None
-    try:
-      light_bulb = LightBulbWithBadGuardState()
-    except FiniteStateMachineError as error:
-      pass
+    self.assertRaises(FiniteStateMachineError, LightBulbWithBadGuardState)
     self.assertTrue(light_bulb == None)
