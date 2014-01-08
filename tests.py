@@ -103,7 +103,7 @@ class LightBulbTests(TestCase):
     light_bulb.electricity = True
     self.assertTrue(light_bulb.state == 'off')
     light_bulb.on_message('turn on')
-    self.assertTrue(light_bulb.state == 'on')
+    self.assertTrue(light_bulb.get_state() == 'on')
     self.assertTrue(light_bulb.indicator == 'lit')
     light_bulb.on_message('turn off')
     self.assertTrue(light_bulb.state == 'off')
@@ -121,23 +121,23 @@ class LightBulbTests(TestCase):
     light_bulb.electricity = True
     self.assertTrue(light_bulb.state == 'off')
     light_bulb.on_message('turn on')
-    self.assertTrue(light_bulb.state == 'on')
+    self.assertTrue(light_bulb.get_state() == 'on')
     self.assertTrue(light_bulb.indicator == 'lit')
     light_bulb.on_message('turn off')
     self.assertTrue(light_bulb.state == 'off')
     self.assertTrue(light_bulb.indicator == 'dim')
     light_bulb.on_message('break')
-    self.assertTrue(light_bulb.state == 'broken')
+    self.assertTrue(light_bulb.get_state() == 'broken')
     self.assertTrue(light_bulb.indicator == 'broken')
     self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn on')
-    self.assertTrue(light_bulb.state == 'broken')
+    self.assertTrue(light_bulb.get_state() == 'broken')
     self.assertTrue(light_bulb.indicator == 'broken')
 
   def test_guard_denial(self):
     light_bulb = LightBulb()
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn on')
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     self.assertFalse(hasattr(light_bulb, 'indicator'))
 
   def test_multiple_guards(self):

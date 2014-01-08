@@ -113,6 +113,7 @@ class FiniteStateMachine(object):
   '''
   def __init__(self, *args, **kwargs):
     super(FiniteStateMachine, self).__init__(*args, **kwargs)
+    self.__state__ = self.state
     self.__fsm_transition_table__ = self.__create_lookup_table__()
 
   def __create_lookup_table__(self):
@@ -239,6 +240,9 @@ class FiniteStateMachine(object):
         states.append(end)
     return states
 
+  def get_state(self):
+    return self.__state__
+
   def transition(self, to = None, event = None):
     '''
     Transitions the finite state machine to a new state.
@@ -247,15 +251,15 @@ class FiniteStateMachine(object):
                event - The event that caused the state change.
     '''
     # Make sure we are in a good state.
-    transitions = self.__fsm_transition_table__.get(self.state)
+    transitions = self.__fsm_transition_table__.get(self.__state__)
     if not transitions:
       raise FiniteStateMachineError('The %s state is invalid, or we \
-      have entered a terminal state.' % (self.state))
+      have entered a terminal state.' % (self.__state__))
     # Try to find the desired transition.
     transition = transitions.get(to)
     if not transition:
       raise FiniteStateMachineError('The transition from %s to %s is \
-      invalid.' % (self.state, to))
+      invalid.' % (self.__state__, to))
     # If there are any guards lets execute those now.
     if transition.get('end_state').has_key('guard'):
       allowed = transition.get('end_state').get('guard')()
@@ -264,7 +268,7 @@ class FiniteStateMachine(object):
         or False values.')
       if not allowed:
         raise FiniteStateMachineError('A guard declined the transition \
-        from %s to %s.' % (self.state, to))
+        from %s to %s.' % (self.__state__, to))
     # Try to execute the action associated with leaving the current state.
     if transition.get('beginning_state').has_key('on_exit'):
       transition.get('beginning_state').get('on_exit')(event)
@@ -272,4 +276,4 @@ class FiniteStateMachine(object):
     if transition.get('end_state').has_key('on_enter'):
       transition.get('end_state').get('on_enter')(event)
     # Enter the new state and we're done.
-    self.state = to
+    self.__state__ = to
