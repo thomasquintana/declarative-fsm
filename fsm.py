@@ -113,8 +113,8 @@ class FiniteStateMachine(object):
   '''
   def __init__(self, *args, **kwargs):
     super(FiniteStateMachine, self).__init__(*args, **kwargs)
-    self.__state__ = self.state
     self.__fsm_transition_table__ = self.__create_lookup_table__()
+    self.__state__ = self.state
 
   def __create_lookup_table__(self):
     '''
