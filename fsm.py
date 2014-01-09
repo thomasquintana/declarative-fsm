@@ -240,7 +240,7 @@ class FiniteStateMachine(object):
         states.append(end)
     return states
 
-  def get_state(self):
+  def state(self):
     return self.__state__
 
   def transition(self, to = None, event = None):
