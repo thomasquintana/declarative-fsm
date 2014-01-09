@@ -21,8 +21,8 @@ from lib.fsm import *
 from unittest import TestCase, expectedFailure
 
 class AbstractLightBulb(FiniteStateMachine):
-  # Current state.
-  state = 'off'
+  # Initial state.
+  initial_state = 'off'
 
   # Possible transitions.
   transitions = [
@@ -101,30 +101,30 @@ class LightBulbTests(TestCase):
   def test_success_scenario(self):
     light_bulb = LightBulb()
     light_bulb.electricity = True
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     light_bulb.on_message('turn on')
     self.assertTrue(light_bulb.get_state() == 'on')
     self.assertTrue(light_bulb.indicator == 'lit')
     light_bulb.on_message('turn off')
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     self.assertTrue(light_bulb.indicator == 'dim')
 
   def test_invalid_transition(self):
     light_bulb = LightBulb()
     light_bulb.electricity = True
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     self.assertRaises(FiniteStateMachineError, light_bulb.on_message, 'turn off')
     self.assertFalse(hasattr(light_bulb, 'indicator'))
 
   def test_terminal_state(self):
     light_bulb = LightBulb()
     light_bulb.electricity = True
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     light_bulb.on_message('turn on')
     self.assertTrue(light_bulb.get_state() == 'on')
     self.assertTrue(light_bulb.indicator == 'lit')
     light_bulb.on_message('turn off')
-    self.assertTrue(light_bulb.state == 'off')
+    self.assertTrue(light_bulb.get_state() == 'off')
     self.assertTrue(light_bulb.indicator == 'dim')
     light_bulb.on_message('break')
     self.assertTrue(light_bulb.get_state() == 'broken')
