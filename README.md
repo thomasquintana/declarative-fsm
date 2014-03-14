@@ -48,7 +48,8 @@ class LightSwitch(FiniteStateMachine):
 
   # Attach a guard to the FSM that protects transitions into
   # the on state. The guard is a predicate that returns True
-  # or False based on availability of electricity to the socket.
+  # or False based on the availability of electricity to the
+  # socket.
   @Guard(state = 'on')
   def check_electricity(self):
     return self.electricity
