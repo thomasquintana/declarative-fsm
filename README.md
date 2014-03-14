@@ -4,7 +4,7 @@ The purpose of this project is to use the expressive power of the Python languag
 ### Concepts
 A few concepts are important to understand in order to properly use this project. As an aid, an image has been provided below to help convey the ideas covered in this section.
 
-![Declarative FSM](https://raw.github.com/thomasquintana/declarative-fsm/master/declarative-fsm.png "Finite State Machine")
+![Finite State Machine](https://raw.github.com/thomasquintana/declarative-fsm/master/declarative-fsm.png "Finite State Machine")
 
 **Actions**  
 An action is executed upon entering or exiting a state. Actions are the mechanism by which a finite state machine (FSM) gets work done.  
