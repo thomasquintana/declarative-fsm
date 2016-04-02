@@ -20,7 +20,6 @@
 '''
 In this module we implement a declarative finite state machine using method decorators.
 '''
-import types
 
 
 def is_string(string):
