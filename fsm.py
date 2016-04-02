@@ -22,6 +22,14 @@ In this module we implement a declarative finite state machine using method deco
 '''
 import types
 
+
+def is_string(string):
+  try:
+    return isinstance(string, basestring)
+  except NameError:
+    return isinstance(string, str)
+
+
 class FiniteStateMachineError(Exception):
   '''
   A finite state machine exception.
@@ -53,24 +61,24 @@ class Action(object):
     # state machine.
     state = self.kwargs.get('state')
     if not state \
-      or not type(state) == types.StringType \
+      or not is_string(state) \
       or len(state) == 0:
       raise FiniteStateMachineError('Please specify a valid action \
       state attribute.\n Possible values are strings.')
     else:
       function.__fsm_action_state__ = state
-    if self.kwargs.has_key('on_enter'):
+    if 'on_enter' in self.kwargs:
       on_enter = self.kwargs.get('on_enter')
-      if type(on_enter) == types.BooleanType:
+      if isinstance(on_enter, bool):
         function.__fsm_action_on_enter__ = on_enter
       else:
         raise TypeError('Please specify a valid action on_enter \
         attribute.\n Possible values are True or False.')
     else:
       function.__fsm_action_on_enter__ = True
-    if self.kwargs.has_key('on_exit'):
+    if 'on_exit' in self.kwargs:
       on_exit = self.kwargs.get('on_exit')
-      if type(on_exit) == types.BooleanType:
+      if isinstance(on_exit, bool):
         function.__fsm_action_on_exit__ = on_exit
       else:
         raise TypeError('Please specify a valid action on_exit \
@@ -98,7 +106,7 @@ class Guard(object):
     # state machine.
     state = self.kwargs.get('state')
     if not state \
-      or not type(state) == types.StringType \
+      or not is_string(state) \
       or len(state) == 0:
       raise TypeError('Please specify a valid guard state attribute.\n\
       Possible values are strings.')
@@ -135,9 +143,9 @@ class FiniteStateMachine(object):
       if not transition:
         transition = dict()
         transitions.update({ end: transition })
-      if not transition.has_key('beginning_state'):
+      if 'beginning_state' not in transition:
         transition.update({ 'beginning_state': state_map.get(begin) })
-      if not transition.has_key('end_state'):
+      if 'end_state' not in transition:
         transition.update({ 'end_state': state_map.get(end) })
     return lookup_table
 
@@ -163,14 +171,14 @@ class FiniteStateMachine(object):
         state_name, action.__name__))
       state = state_map.get(state_name)
       on_enter = action.__fsm_action_on_enter__
-      if not state.has_key('on_enter'):
+      if 'on_enter' not in state:
         if on_enter:
           state.update({ 'on_enter': action })
       else:
         raise FiniteStateMachineError('The %s state can only have one \
         action declared for on_enter.' % (state_name))
       on_exit = action.__fsm_action_on_exit__
-      if not state.has_key('on_exit'):
+      if 'on_exit' not in state:
         if on_exit:
           state.update({ 'on_exit': action })
       else:
@@ -185,7 +193,7 @@ class FiniteStateMachine(object):
         transitions or modify the @Guard decorator on %s.' % (state_name,
         state_name, guard.__name__))
       state = state_map.get(state_name)
-      if not state.has_key('guard'):
+      if 'guard' not in state:
         state.update({ 'guard': guard })
       else:
         raise FiniteStateMachineError('The %s state can only have one guard \
@@ -261,19 +269,19 @@ class FiniteStateMachine(object):
       raise FiniteStateMachineError('The transition from %s to %s is \
       invalid.' % (self.__state__, to))
     # If there are any guards lets execute those now.
-    if transition.get('end_state').has_key('guard'):
+    if 'guard' in transition.get('end_state'):
       allowed = transition.get('end_state').get('guard')()
-      if not type(allowed) == types.BooleanType:
+      if not isinstance(allowed, bool):
         raise FiniteStateMachineError('A guard must only return True \
         or False values.')
       if not allowed:
         raise FiniteStateMachineError('A guard declined the transition \
         from %s to %s.' % (self.__state__, to))
     # Try to execute the action associated with leaving the current state.
-    if transition.get('beginning_state').has_key('on_exit'):
+    if 'on_exit'in transition.get('beginning_state'):
       transition.get('beginning_state').get('on_exit')(event)
     # Try to execute the action associated with entering the new state.
-    if transition.get('end_state').has_key('on_enter'):
+    if 'on_enter'in transition.get('end_state'):
       transition.get('end_state').get('on_enter')(event)
     # Enter the new state and we're done.
     self.__state__ = to

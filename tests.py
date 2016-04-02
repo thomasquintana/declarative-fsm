@@ -17,8 +17,8 @@
 #
 # Thomas Quintana <quintana.thomas@gmail.com>
 
-from lib.fsm import *
-from unittest import TestCase, expectedFailure
+from fsm import *
+from unittest import TestCase, expectedFailure, main
 
 class AbstractLightBulb(FiniteStateMachine):
   # Initial state.
@@ -164,3 +164,6 @@ class LightBulbTests(TestCase):
     light_bulb = None
     self.assertRaises(FiniteStateMachineError, LightBulbWithBadGuardState)
     self.assertTrue(light_bulb == None)
+    
+if __name__ == '__main__':
+  main()
