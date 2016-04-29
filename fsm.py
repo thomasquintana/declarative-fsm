@@ -20,7 +20,7 @@
 '''
 In this module we implement a declarative finite state machine using method decorators.
 '''
-
+__version__ = '0.0.1'
 
 def is_string(string):
   try:
