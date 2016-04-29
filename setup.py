@@ -11,5 +11,5 @@ setup(
     author_email="quintana.thomas@gmail.com",
     description='A Python declarative finite state machine.',
     license="PROPRIETARY",
-    url="",
+    url="https://github.com/thomasquintana/declarative-fsm",
 )
